@@ -15,10 +15,12 @@ import java.util.*;
  */
 public class BytecodeAssembler extends AssemblerParser {
     public static final int INITIAL_CODE_SIZE = 1024;
+
     protected Map<String,Integer> instructionOpcodeMapping =
         new HashMap<String,Integer>();
     protected Map<String, LabelSymbol> labels = // label scope
         new HashMap<String, LabelSymbol>();
+
     /** All float and string literals have unique int index in constant
      *  pool. We put FunctionSymbols in here too. */
     protected List<Object> constPool = new ArrayList<Object>();

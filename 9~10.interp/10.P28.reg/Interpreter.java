@@ -97,10 +97,21 @@ public class Interpreter {
     protected void cpu() {
         int i=0, j=0, k=0, addr=0, fieldIndex=0;
         short opcode = code[ip];
+        
         while (opcode!= BytecodeDefinition.INSTR_HALT && ip < codeSize) {
             if ( trace ) trace();
             ip++; //jump to next instruction or first byte of operand
             Object r[] = calls[fp].registers; // shortcut to current registers
+
+            /*
+            switch(opcode) {
+                case BytecodeDefinition.XXX:
+                    ...
+                    break;
+            }
+            opcode = code[ip];
+            */
+
             switch (opcode) {
                 case BytecodeDefinition.INSTR_IADD :
                     i = getRegOperand();

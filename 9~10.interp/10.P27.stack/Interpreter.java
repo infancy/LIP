@@ -42,6 +42,7 @@ public class Interpreter {
         boolean dump = false;
         String filename=null;
         int i = 0;
+        
         while ( i<args.length ) {
             if ( args[i].equals("-trace") ) { trace = true; i++; }
             else if ( args[i].equals("-dis") ) { disassemble = true; i++; }
@@ -105,9 +106,20 @@ public class Interpreter {
         float e,f;
         int addr = 0;
         short opcode = code[ip];
+
         while (opcode!= BytecodeDefinition.INSTR_HALT && ip < codeSize) {
             if ( trace ) trace();
             ip++; //jump to next instruction or first byte of operand
+
+            /*
+            switch(opcode) {
+                case BytecodeDefinition.XXX:
+                    ...
+                    break;
+            }
+            opcode = code[ip];
+            */
+
             switch (opcode) {
                 case BytecodeDefinition.INSTR_IADD :
                     a = (Integer)operands[sp-1]; // 1st opnd 1 below top

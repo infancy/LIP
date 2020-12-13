@@ -6,6 +6,8 @@
  * We make no guarantees that this code is fit for any purpose. 
  * Visit http://www.pragmaticprogrammer.com/titles/tpdsl for more book information.
 ***/
+
+// 由 ANTLR 根据 Assembler.g 生成, 直接看 Assembler.g 就好
 // $ANTLR 3.2 Sep 23, 2009 12:02:23 /Users/parrt/research/book/TPDSL/Book/code/interp/asm/Assembler.g 2009-09-23 17:37:38
 
 import org.antlr.runtime.*;
