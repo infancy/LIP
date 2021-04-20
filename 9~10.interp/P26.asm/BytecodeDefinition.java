@@ -6,6 +6,8 @@
  * We make no guarantees that this code is fit for any purpose. 
  * Visit http://www.pragmaticprogrammer.com/titles/tpdsl for more book information.
 ***/
+
+// 这里只是一个示意, P27/P28 会有实际的例子
 public class BytecodeDefinition {
     public static final int REG = AssemblerParser.REG;
     public static final int FUNC = AssemblerParser.FUNC;

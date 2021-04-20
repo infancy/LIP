@@ -6,6 +6,8 @@
  *  is where we start execution.  Use .globals and .def for global data
  *  and function definitions, respectively.
  */
+
+// 汇编器负责将汇编代码(iadd r1, r2, r3)翻译成字节码(0xFFFFFFFF...)
 grammar Assembler;
 
 // START: members
@@ -36,18 +38,17 @@ globals : NEWLINE* '.globals' INT NEWLINE {defineDataSize($INT.int);} ;
 //  .def fact: args=1, locals=0
 // START: func
 functionDeclaration
-    : '.def' name=ID ':' 'args' '=' a=INT ',' 'locals' '=' n=INT NEWLINE
-      {defineFunction($name, $a.int, $n.int);}
+    : '.def' name=ID ':' 'args' '=' a=INT ',' 'locals' '=' n=INT NEWLINE {defineFunction($name, $a.int, $n.int);}
     ;
 // END: func
 
+// 对应 BytecodeAssembler 里的四个函数
 // START: instr
 instr
-    :   ID NEWLINE                         {gen($ID);}
-    |   ID operand NEWLINE                 {gen($ID,$operand.start);}
-    |   ID a=operand ',' b=operand NEWLINE {gen($ID,$a.start,$b.start);}
-    |   ID a=operand ',' b=operand ',' c=operand NEWLINE
-        {gen($ID,$a.start,$b.start,$c.start);}
+    :   ID NEWLINE                                       {gen($ID);}
+    |   ID operand NEWLINE                               {gen($ID,$operand.start);}
+    |   ID a=operand ',' b=operand NEWLINE               {gen($ID,$a.start,$b.start);}
+    |   ID a=operand ',' b=operand ',' c=operand NEWLINE {gen($ID,$a.start,$b.start,$c.start);}
     ;
 // END: instr
 

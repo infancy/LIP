@@ -16,6 +16,8 @@ import java.util.*;
 public class BytecodeAssembler extends AssemblerParser {
     public static final int INITIAL_CODE_SIZE = 1024;
 
+    // OpCode 到 Int 的映射
+    // 在构造阶段根据 BytecodeDefinition 中的定义生成这个映射
     protected Map<String,Integer> instructionOpcodeMapping =
         new HashMap<String,Integer>();
     protected Map<String, LabelSymbol> labels = // label scope
@@ -50,6 +52,9 @@ public class BytecodeAssembler extends AssemblerParser {
     /** Return the address associated with label "main:" if defined */
     public FunctionSymbol getMainFunction() { return mainFunction; }
 
+
+    //region gen
+
     /** Generate code for an instruction with no operands */
     protected void gen(Token instrToken) {
         String instrName = instrToken.getText();
@@ -69,13 +74,18 @@ public class BytecodeAssembler extends AssemblerParser {
         gen(instrToken);
         genOperand(operandToken);
     }
-
     protected void gen(Token instrToken, Token oToken1, Token oToken2) {
         gen(instrToken, oToken1);
         genOperand(oToken2);
     }
-
     protected void gen(Token instrToken, Token oToken1, Token oToken2, Token oToken3) {
+        /*
+        // 写入一个 opcode 和三个 int
+        gen(instrToken);
+        genOperand(operandToken);
+        genOperand(operandToken);
+        genOperand(operandToken);
+         */
         gen(instrToken, oToken1, oToken2);
         genOperand(oToken3);
     }
@@ -92,10 +102,15 @@ public class BytecodeAssembler extends AssemblerParser {
             case FUNC :  v = getFunctionIndex(text); break;
             case REG :   v = getRegisterNumber(operandToken); break;
         }
+
         ensureCapacity(ip+4);  // expand code array if necessary
         writeInt(code, ip, v); // write operand to code byte array
         ip += 4;               // we've written four bytes
     }
+
+    //endregion gen
+
+    //region get
 
     protected int getConstantPoolIndex(Object o) {
         if ( constPool.contains(o) ) return constPool.indexOf(o);
@@ -144,6 +159,10 @@ public class BytecodeAssembler extends AssemblerParser {
         return 0; // we don't know the real address yet
     }
 
+    //endregion get
+
+    //region def/get
+
     protected void defineFunction(Token idToken, int args, int locals) {
         String name = idToken.getText();
         FunctionSymbol f = new FunctionSymbol(name, args, locals, ip);
@@ -186,6 +205,8 @@ public class BytecodeAssembler extends AssemblerParser {
         }
     }
 
+    //endregion def/get
+
     protected void ensureCapacity(int index) {
         if ( index >= code.length ) { // expand
             int newSize = Math.max(index, code.length) * 2;
@@ -194,6 +215,8 @@ public class BytecodeAssembler extends AssemblerParser {
             code = bigger;
         }
     }
+
+    //region get/set Int
 
     public static int getInt(byte[] memory, int index) {
         int b1 = memory[index++]&0xFF; // mask off sign-extended bits
@@ -213,4 +236,6 @@ public class BytecodeAssembler extends AssemblerParser {
         bytes[index+2] = (byte)((value>>(8*1))&0xFF);
         bytes[index+3] = (byte)(value&0xFF);
     }
+
+    //endregion get/set Int
 }

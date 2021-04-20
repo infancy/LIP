@@ -75,7 +75,7 @@ public class AssemblerParser extends Parser {
         protected void defineLabel(Token idToken) {;}
 
 
-
+    // 驱动生成汇编代码
     // $ANTLR start "program"
     // /Users/parrt/research/book/TPDSL/Book/code/interp/asm/Assembler.g:25:1: program : ( globals )? ( functionDeclaration | instr | label | NEWLINE )+ ;
     public final void program() throws RecognitionException {

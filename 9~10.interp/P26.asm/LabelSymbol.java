@@ -10,18 +10,16 @@ import java.util.*;
 
 public class LabelSymbol {
     String name;
-
     /** Address in code memory */
     int address;
-
     /** Is this ref'd before def'd. */
     boolean isForwardRef = false;
-
     /** Set when we see actual ID: definition */
     boolean isDefined = true;
-
     /** List of operands in memory we need to update after seeing def */
     Vector<Integer> forwardReferences = null;
+
+
 
     public LabelSymbol(String name) {
 	    this.name = name;
@@ -43,6 +41,8 @@ public class LabelSymbol {
             this.address = address;
         }
     }
+
+
 
     public void addForwardReference(int address) {
         if ( forwardReferences==null ) {

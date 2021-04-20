@@ -13,6 +13,8 @@ import java.io.FileInputStream;
 
 /** A simple stack-based interpreter */
 public class Interpreter {
+    //region Data
+
     public static final int DEFAULT_OPERAND_STACK_SIZE = 100;
     public static final int DEFAULT_CALL_STACK_SIZE = 1000;
 
@@ -34,6 +36,10 @@ public class Interpreter {
     FunctionSymbol mainFunction;    
 
     boolean trace = false;
+
+    //endregion Data
+
+
 
     public static void main(String[] args) throws Exception {
         // PROCESS ARGS
@@ -86,6 +92,10 @@ public class Interpreter {
         }
         return hasErrors;
     }
+
+
+
+    //region exec, cpu, call, getIntOperand
 
     /** Execute the bytecodes in code memory starting at mainAddr */
     public void exec() throws Exception {
@@ -185,6 +195,8 @@ public class Interpreter {
                     a = (Integer)operands[sp--];
                     operands[++sp] = (float)a;
                     break;
+
+                // call, ret
                 case BytecodeDefinition.INSTR_CALL :
                     int funcIndexInConstPool = getIntOperand();
                     call(funcIndexInConstPool);
@@ -193,6 +205,7 @@ public class Interpreter {
                     StackFrame fr = calls[fp--];    // pop stack frame
                     ip = fr.returnAddress;          // branch to ret addr
                     break;
+
                 case BytecodeDefinition.INSTR_BR :
                     ip = getIntOperand();
                     break;
@@ -215,6 +228,7 @@ public class Interpreter {
                     int constPoolIndex = getIntOperand();
                     operands[++sp] = constPool[constPoolIndex];
                     break;
+
                 case BytecodeDefinition.INSTR_LOAD : // load from call stack
                     addr = getIntOperand();
                     operands[++sp] = calls[fp].locals[addr];
@@ -266,6 +280,7 @@ public class Interpreter {
         FunctionSymbol fs = (FunctionSymbol)constPool[functionConstPoolIndex];
         StackFrame f = new StackFrame(fs, ip);
         calls[++fp] = f; // push new stack frame for parameters and locals
+
         // move args from operand stack to top frame on call stack
         for (int a=fs.nargs-1; a>=0; a--) { f.locals[a] = operands[sp--]; }
         ip = fs.address; // branch to function
@@ -281,7 +296,11 @@ public class Interpreter {
         return word;
     }
 
-    // Tracing, dumping, ...
+    //endregion exec, cpu, call, getIntOperand
+
+
+
+    //region Tracing, dumping, ...
     
     public void disassemble() { disasm.disassemble(); }
 
@@ -349,4 +368,6 @@ public class Interpreter {
         }
         System.out.println();
     }
+
+    //endregion Tracing, dumping, ...
 }
